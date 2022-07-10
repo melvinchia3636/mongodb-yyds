@@ -52,6 +52,18 @@ app.get("/images/:imageName", async (req, res) => {
   res.sendFile(`${__dirname}/public/images/${req.params.imageName}`)
 })
 
+app.get("/article/:id", async (req, res) => {
+  const connection = await mongodb.MongoClient.connect(DB_ENDPOINT)
+  const db = connection.db("blog")
+  const collection = db.collection("post")
+
+  const post = await collection.findOne({
+    _id: mongodb.ObjectId(req.params.id)
+  })
+  res.json(post)
+  connection.close()
+})
+
 app.listen(3636, () => {
   console.log("Server is running on port 3636")
 })

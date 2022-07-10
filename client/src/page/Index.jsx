@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { Icon } from '@iconify/react';
@@ -15,13 +17,14 @@ function Post({ data }) {
             return parser.parseFromString(data.content, 'text/html').body.textContent;
           })()}
         </p>
-        <a href="/" className="font-semibold mt-4 flex items-center gap-1">
+        <Link to={`/article/${data._id}`} className="font-semibold mt-4 flex items-center gap-1">
           Read article
           <Icon icon="uil:arrow-right" className="mt-[1px] w-6 h-6" />
-        </a>
+        </Link>
       </div>
       <div className="dropdown dropdown-end">
         <label
+          tabIndex="0"
           className="btn bg-transparent border-none hover:bg-slate-200 m-1"
         >
           <Icon

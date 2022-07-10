@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import Index from './page/Index';
 import Compose from './page/Compose';
 import 'react-toastify/dist/ReactToastify.css';
+import Article from './page/Article';
 
 function App() {
   const notifyFinish = () => {
@@ -19,6 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/compose" element={<Compose notifyFinish={notifyFinish} />} />
+          <Route path="/article/:id" element={<Article />} />
         </Routes>
       </Router>
       <ToastContainer />
