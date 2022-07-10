@@ -3,3 +3,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.ql-container {
+  @apply bg-slate-100
+}
+
+*:focus {
+  outline: none;
+}
+
+.ql-snow:is(.ql-toolbar, .ql-container) {
+  @apply border-2 border-slate-300
+}
+
+.ql-toolbar {
+  @apply rounded-t-md bg-slate-100
+}
+
+.ql-container {
+  @apply rounded-b-md
+}
+
+:root {
+  --toastify-color-success: rgb(30 41 59);
+}
