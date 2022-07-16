@@ -3,16 +3,17 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { Icon } from '@iconify/react';
 import React, { useEffect, useState, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
 import { Context } from '../App';
 
-function Compose() {
+function Edit() {
   const notify = useContext(Context);
   const { quill, quillRef } = useQuill();
   const [title, setTitle] = useState('');
   const navigate = useNavigate();
+  const { id } = useParams();
 
   function insertToquill(url) {
     // push image url to rich quill.
@@ -58,8 +59,8 @@ function Compose() {
       time: new Date().toISOString(),
     };
 
-    fetch('http://localhost:3636/create', {
-      method: 'POST',
+    fetch(`http://localhost:3636/article/${id}`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -68,25 +69,23 @@ function Compose() {
       .then((res) => res.json())
       .then((json) => {
         if (json.success) {
-          localStorage.clear();
-          notify('Post created successfully!');
+          notify('Post updated successfully!');
           navigate('/');
         }
       });
   }
 
   useEffect(() => {
-    setTitle(localStorage.getItem('autosave__title') || '');
     if (quill) {
       quill.getModule('toolbar').addHandler('image', () => {
         selectLocalImage();
       });
-      quill.clipboard.dangerouslyPasteHTML(
-        localStorage.getItem('autosave__content') || '',
-      );
-      quill.on('text-change', () => {
-        localStorage.setItem('autosave__content', quill.root.innerHTML); // Get delta contents
-      });
+      fetch(`http://localhost:3636/article/${id}`)
+        .then((e) => e.json())
+        .then((data) => {
+          setTitle(data.name);
+          quill.root.innerHTML = data.content;
+        });
     }
   }, [quill]);
 
@@ -95,7 +94,7 @@ function Compose() {
       <div className="flex items-center justify-between w-full h-min">
         <h1 className="text-3xl flex items-center gap-2">
           <Icon icon="uil:plus" className="w-8 h-8" />
-          Create new post
+          Edit Post
         </h1>
         <div className="flex items-center gap-2">
           <Link
@@ -109,7 +108,7 @@ function Compose() {
             onClick={publish}
             className="bg-slate-800 text-slate-200 tracking-wider rounded-md font-medium py-4 shadow-md flex items-center justify-center gap-2 w-40"
           >
-            Publish
+            Update
             <Icon icon="uil:arrow-right" className="w-6 h-6" />
           </button>
         </div>
@@ -135,4 +134,4 @@ function Compose() {
   );
 }
 
-export default Compose;
+export default Edit;
